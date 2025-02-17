@@ -23,13 +23,16 @@ export const AuthContextProvider = ({ children }) => {
       const userEmail = result.user.email;
 
       // Verificar domínio do e-mail
-      if (userEmail.endsWith('@aluno.ifsc.edu.br') || userEmail.endsWith('@ifsc.edu.br')) {
+      if (userEmail.endsWith('@aluno.ifsc.edu.br')) {
         setUser(result.user);
-        navigate('/dashboard'); // Redireciona para o Dashboard
+        navigate('/dashboardAluno'); // Redireciona para o Dashboard do Aluno
+      } else if (userEmail.endsWith('@ifsc.edu.br')) {
+        setUser(result.user);
+        navigate('/dashboardCoordenador'); // Redireciona para o Dashboard do Coordenador
       } else {
         Swal.fire({
           title: 'Erro!',
-          text: 'E-mail inválido. Use um e-mail institucional.',
+          text: 'E-mail inválido, use um e-mail institucional.',
           icon: 'error',
           confirmButtonText: 'OK',
         });

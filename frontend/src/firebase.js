@@ -1,6 +1,7 @@
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth'; // Importando o Firebase Authentication
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Importando Firebase Storage
 
 const firebaseConfig = {
   apiKey: "AIzaSyAMTBWdn8f9XKGvUKe0HydYl_Q97RmnFfs",
@@ -13,5 +14,18 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-export const auth = getAuth(app);
+
+// Inicializando o Firestore, Authentication e Storage
+const db = getFirestore(app);
+const auth = getAuth(app); // Inicializando a autenticação
+const storage = getStorage(app);
+
+// Função para fazer upload de arquivo para o Firebase Storage
+const uploadFile = async (file) => {
+  const storageRef = ref(storage, `comprovantes/${file.name}`); // Cria uma referência para o arquivo
+  await uploadBytes(storageRef, file); // Faz o upload do arquivo para o Firebase Storage
+  const fileURL = await getDownloadURL(storageRef); // Obtém a URL do arquivo após o upload
+  return fileURL; // Retorna a URL do arquivo
+};
+
+export { db, addDoc, collection, auth, storage, uploadFile }; // Exportando todos os serviços
